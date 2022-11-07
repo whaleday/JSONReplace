@@ -1,30 +1,25 @@
-ï»¿#include "JSONReplace.h"
+#include "JSONReplace.h"
 int main()
 {
 	srand((unsigned int)time(NULL));
-	ifile fin = "body";
-	ifile set = "setting.txt";
+	ifile fin("body");
+	ifile set("setting.txt");
 	ofile fout = nowtime();
 	for (int i = 0; i < 274; i++)
-	{
 		fout.ofput(fin.ifget());
-	}
-	fout.~ofile();
 	time_t t;
 	tinf info;
-	set.skip(62);
-	info.mode = set.ifget();
-	set.skip(2);
-	if (info.mode >= '0' && info.mode <= '4')
+    set.skip(1,SEEK_ENT);
+	if (set.nextch() == '2' || set.nextch() == '\n')
 	{
-		if (info.mode != '2')
+		if (set.nextch() == '2')
 		{
 			set.ifget("%d-%d-%d %d", &info.t.tm_year, &info.t.tm_mon, &info.t.tm_mday, &info.t.tm_hour);
 			info.tget(set);
-			if (info.mode == '0' || info.mode == '2')
+			if (set.nextch() == ':')
 			{
 				info.tget(set);
-				if (info.mode == '0')
+				if (set.nextch() == '.')
 					set.ifget(".%d", &info.msec);
 				else
 					info.randms();
@@ -38,14 +33,16 @@ int main()
 		}
 		else
 		{
-			t = info.tget();
+			t = info.tget(1);
 			set.skip(2);
 		}
 		set.skip(2);
 	}
 	else
-	{
-		cerr << "æ— æ•ˆçš„å‚æ•°" << endl;
+    {
+		cerr << "ÎÞÐ§µÄ²ÎÊý" << endl;
+        system("pause");
 		exit(-1);
 	}
+    return 0;
 }

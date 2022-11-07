@@ -32,7 +32,7 @@ void tinf::tget(ifile& f)
 }
 void tinf::rands()
 {
-	t.tm_sec = rand() % 60;
+    t.tm_sec = rand() % 60;
 }
 void tinf::randms()
 {
@@ -56,13 +56,13 @@ bool tinf::isvaild()
 	else
 	{
 		cerr << "无效的日期格式" << endl;
+        system("pause");
 		exit(-1);
 	}
-
 }
-time_t tinf::tget()
+time_t tinf::tget(bool b)
 {
-	if (mode != '3' && isvaild())
+	if (!b && isvaild())
 	{
 		t.tm_mon--;
 		t.tm_year -= 1900;

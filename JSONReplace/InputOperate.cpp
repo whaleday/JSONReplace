@@ -10,6 +10,13 @@ ifile::ifile(string name)
 }
 void ifile::skip(int ofs, int para)
 {
+    char buf[MAX];
+    if(para == 3)
+    {
+        while(ofs--)
+            fgets(buf, MAX, pf);
+        return;
+    }
 	fseek(pf, ofs, para);
 }
 char ifile::ifget()
@@ -23,6 +30,14 @@ void ifile::ifget(string fms, ...)
 	const char* _format = fms.data();
 	vfscanf(pf, _format, _arglist);
 	va_end(_arglist);
+}
+char ifile::nextch()
+{
+    char ch = ifget();
+    if(ch == '\n')
+        skip(-1);
+    skip(-1);
+    return ch;
 }
 ifile::~ifile()
 {
