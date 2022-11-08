@@ -2,47 +2,39 @@
 int main()
 {
 	srand((unsigned int)time(NULL));
-	ifile fin("body");
 	ifile set("setting.txt");
+	time_t t = set.readt();
+	ifile fin("body");
 	ofile fout = nowtime();
-	for (int i = 0; i < 274; i++)
-		fout.ofput(fin.ifget());
-	time_t t;
-	tinf info;
-    set.skip(1,SEEK_ENT);
-	if (set.nextch() == '2' || set.nextch() == '\n')
-	{
-		if (set.nextch() == '2')
-		{
-			set.ifget("%d-%d-%d %d", &info.t.tm_year, &info.t.tm_mon, &info.t.tm_mday, &info.t.tm_hour);
-			info.tget(set);
-			if (set.nextch() == ':')
-			{
-				info.tget(set);
-				if (set.nextch() == '.')
-					set.ifget(".%d", &info.msec);
-				else
-					info.randms();
-			}
-			else
-			{
-				info.rands();
-				info.randms();
-			}
-			t = info.tget();
-		}
-		else
-		{
-			t = info.tget(1);
-			set.skip(2);
-		}
-		set.skip(2);
-	}
-	else
-    {
-		cerr << "无效的参数" << endl;
-        system("pause");
-		exit(-1);
-	}
+	fout.copy(fin, 16);
+	ifile way = set;
+	double s = way.reads();
+	string str = dtrans(s);
+	fout.ofput(str);
+	fin.skip(4);
+	fout.copy(fin, 255);
+	fout.putll(way);
+	while (fin.ifget() != ']');
+	fin.skip(-1);
+	fout.copy(fin, 39);
+	fout.ofput(str);
+	fin.skip(4);
+	fout.copy(fin, 28);
+	double v = set.readv();
+	str = dtrans(60 / v);
+	fout.ofput(str);
+	fin.skip(4);
+	fout.copy(fin, 10);
+	str = to_string(t);
+	fout.ofput(str);
+	fin.skip(13);
+	fout.copy(fin, 9);
+	str = gettime(s, v);
+	fout.ofput(str);
+	while (fin.ifget() != ',');
+	fin.skip(-1);
+	fout.copy(fin, 11);
+	cout << "生成成功" << endl << "Content-Length应修改为" << fout.size() << endl;
+	system("pause");
     return 0;
 }

@@ -16,6 +16,21 @@ string nowtime()
 		+ addzero(now->tm_hour) + addzero(now->tm_min) + addzero(now->tm_sec);
 	return ret;
 }
+string dtrans(double d)
+{
+	char s[10];
+	sprintf(s, "%.2lf", d);
+	string str(s);
+	return str;
+}
+string gettime(double d,double v)
+{
+	char s[10];
+	double t = 3600 * d / v;
+	sprintf(s, "%.lf", t);
+	string str(s);
+	return str;
+}
 void tinf::tget(ifile& f)
 {
 	static int count = 1;
@@ -56,7 +71,7 @@ bool tinf::isvaild()
 	else
 	{
 		cerr << "无效的日期格式" << endl;
-        system("pause");
+		system("pause");
 		exit(-1);
 	}
 }
